@@ -4,6 +4,11 @@ import com.example.sfera_backend.entity.audit.AuditableEntity;
 import com.example.sfera_backend.entity.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -12,12 +17,12 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Table(name = "users")
-public class User extends AuditableEntity {
-    @Column(unique = true,nullable = false)
-    private String username;
+public class User extends AuditableEntity implements UserDetails {
+    @Column
+    private String fullName;
 
     @Column(nullable = false,unique = true)
-    private String chatId;
+    private Long chatId;
 
     @Column(nullable = false,unique = true)
     private String phone;
@@ -28,5 +33,21 @@ public class User extends AuditableEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
-    private boolean active;
+    @Column(columnDefinition = "TEXT")
+    private String refreshToken;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
+
+    @Override
+    public String getUsername() {
+        return phone;
+    }
 }

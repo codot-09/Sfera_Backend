@@ -32,5 +32,5 @@ public class Course extends AuditableEntity {
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id")
-    private User teacher;
+    private Teacher teacher;
 }
