@@ -38,16 +38,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.refreshToken(refreshToken));
     }
 
-    @PatchMapping("/forgot-password")
-    @Operation(
-            summary = "Parolni yangilash"
-    )
-    public ResponseEntity<ApiResponse<String>> forgotPassword(
-            @RequestParam String phoneNumber
-    ){
-        return ResponseEntity.ok(authService.forgotPassword(phoneNumber));
-    }
-
     @PostMapping("/log-out")
     @Operation(
             summary = "Tizimdan chiqish",

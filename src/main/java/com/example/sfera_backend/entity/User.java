@@ -1,7 +1,6 @@
 package com.example.sfera_backend.entity;
 
 import com.example.sfera_backend.entity.audit.AuditableEntity;
-import com.example.sfera_backend.entity.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,22 +18,21 @@ import java.util.List;
 @Table(name = "users")
 public class User extends AuditableEntity implements UserDetails {
     @Column
-    private String fullName;
+    private String fullName = "Adminstrator";
 
     @Column(nullable = false,unique = true)
     private Long chatId;
 
-    @Column(nullable = false,unique = true)
+    @Column(unique = true)
     private String phone;
 
     @Column(nullable = false)
     private String passwordHash;
 
-    @Enumerated(value = EnumType.STRING)
-    private UserRole role;
-
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
+
+    private boolean verified;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -8,5 +8,4 @@ public interface AuthService {
     ApiResponse<TokenResponse> login(LoginRequest request);
     ApiResponse<String> refreshToken(String refreshToken);
     ApiResponse<String> logout(String refreshToken);
-    ApiResponse<String> forgotPassword(String phoneNumber);
 }
