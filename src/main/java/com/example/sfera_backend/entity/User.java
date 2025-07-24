@@ -33,6 +33,9 @@ public class User extends AuditableEntity implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
+    @Column
+    private String fileUrl;
+
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
 
@@ -50,4 +53,5 @@ public class User extends AuditableEntity implements UserDetails {
     public String getUsername() {
         return phone;
     }
+
 }

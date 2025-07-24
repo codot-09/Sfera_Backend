@@ -4,10 +4,12 @@ import com.example.sfera_backend.dto.request.CourseRequest;
 import com.example.sfera_backend.dto.response.ApiResponse;
 import com.example.sfera_backend.dto.response.CourseDetailsResponse;
 import com.example.sfera_backend.entity.Course;
+import com.example.sfera_backend.entity.Teacher;
 import com.example.sfera_backend.entity.User;
 import com.example.sfera_backend.exception.ResourceNotFoundException;
 import com.example.sfera_backend.mapper.CourseMapper;
 import com.example.sfera_backend.repository.CourseRepository;
+import com.example.sfera_backend.repository.TeacherRepository;
 import com.example.sfera_backend.repository.UserRepository;
 import com.example.sfera_backend.service.CourseService;
 import com.example.sfera_backend.service.cloud.CloudService;
@@ -25,6 +27,7 @@ public class CourseServiceImpl implements CourseService {
     private final UserRepository userRepository;
     private final CloudService cloudService;
     private final CourseMapper mapper;
+    private final TeacherRepository teacherRepository;
 
     @Override
     public ApiResponse<String> createCourse(CourseRequest request, MultipartFile file) throws IOException {
@@ -34,7 +37,7 @@ public class CourseServiceImpl implements CourseService {
 
         String imageUr = cloudService.uploadFile(file);
 
-        User teacher = userRepository.findById(request.getTeacherId())
+        Teacher teacher = teacherRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
 
         Course newCourse = Course.builder()
@@ -73,8 +76,8 @@ public class CourseServiceImpl implements CourseService {
 
         String imageUrl = cloudService.uploadFile(file);
 
-        User teacher = userRepository.findById(request.getTeacherId())
-                        .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
+        Teacher teacher = teacherRepository.findById(request.getTeacherId())
+                .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
 
         course.setName(request.getName());
         course.setDescription(request.getDescription());
