@@ -76,7 +76,7 @@ public class CourseController {
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(code = org.springframework.http.HttpStatus.NO_CONTENT)
     public ResponseEntity<ApiResponse<String>> deleteCourse(
-            @PathVariable UUID id
+            @PathVariable("id") UUID id
     ){
         return ResponseEntity.ok(courseService.deleteCourse(id));
     }

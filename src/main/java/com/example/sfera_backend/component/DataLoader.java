@@ -23,11 +23,10 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if(ddl.equals("create") || ddl.equals("create-drop")){
             User superAdmin = User.builder()
-                    .chatId("7193645528")
+                    .chatId(7193645528L)
                     .phone("998916368424")
-                    .username("@nimadir_321")
+                    .fullName("Admin admin")
                     .role(UserRole.ADMIN)
-                    .active(true)
                     .passwordHash(passwordEncoder.encode("admin123"))
                     .build();
 
