@@ -28,5 +28,8 @@ public class User extends AuditableEntity {
     @Enumerated(value = EnumType.STRING)
     private UserRole role;
 
+    @Column
+    private String fileUrl;
+
     private boolean active;
 }
