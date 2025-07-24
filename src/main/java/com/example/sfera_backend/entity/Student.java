@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
+import javax.swing.*;
+
 @Getter
 @Setter
 @AllArgsConstructor
