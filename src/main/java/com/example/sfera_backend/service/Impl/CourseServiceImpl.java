@@ -1,0 +1,101 @@
+package com.example.sfera_backend.service.Impl;
+
+import com.example.sfera_backend.dto.request.CourseRequest;
+import com.example.sfera_backend.dto.response.ApiResponse;
+import com.example.sfera_backend.dto.response.CourseDetailsResponse;
+import com.example.sfera_backend.entity.Course;
+import com.example.sfera_backend.entity.User;
+import com.example.sfera_backend.exception.ResourceNotFoundException;
+import com.example.sfera_backend.mapper.CourseMapper;
+import com.example.sfera_backend.repository.CourseRepository;
+import com.example.sfera_backend.repository.UserRepository;
+import com.example.sfera_backend.service.CourseService;
+import com.example.sfera_backend.service.cloud.CloudService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class CourseServiceImpl implements CourseService {
+    private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
+    private final CloudService cloudService;
+    private final CourseMapper mapper;
+
+    @Override
+    public ApiResponse<String> createCourse(CourseRequest request, MultipartFile file) throws IOException {
+        if(courseRepository.existsByName(request.getName())){
+            return ApiResponse.error("Kurs allaqachon mavjud");
+        }
+
+        String imageUr = cloudService.uploadFile(file);
+
+        User teacher = userRepository.findById(request.getTeacherId())
+                .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
+
+        Course newCourse = Course.builder()
+                .name(request.getName())
+                .description(request.getDescription())
+                .duration(request.getDuration())
+                .videoUrl(request.getVideoUrl())
+                .price(request.getPrice())
+                .teacher(teacher)
+                .imageUrl(imageUr)
+                .build();
+
+        courseRepository.save(newCourse);
+        return ApiResponse.success("Kurs muvaffaqiyatli yaratildi");
+    }
+
+    @Override
+    public ApiResponse<CourseDetailsResponse> getById(UUID id) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Kurs topilmadi"));
+
+        return ApiResponse.success(mapper.toResponse(course));
+    }
+
+    @Override
+    public ApiResponse<List<CourseDetailsResponse>> getAll() {
+        List<Course> courses = courseRepository.findAll();
+
+        return ApiResponse.success(mapper.toResponseList(courses));
+    }
+
+    @Override
+    public ApiResponse<String> updateCourse(UUID id, CourseRequest request,MultipartFile file) throws IOException {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Kurs topilmadi"));
+
+        String imageUrl = cloudService.uploadFile(file);
+
+        User teacher = userRepository.findById(request.getTeacherId())
+                        .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
+
+        course.setName(request.getName());
+        course.setDescription(request.getDescription());
+        course.setDuration(request.getDuration());
+        course.setPrice(request.getPrice());
+        course.setVideoUrl(request.getVideoUrl());
+        course.setImageUrl(imageUrl);
+        course.setTeacher(teacher);
+
+        courseRepository.save(course);
+
+        return ApiResponse.success("Kurs muvaffaqiyatli yukandildi");
+    }
+
+    @Override
+    public ApiResponse<String> deleteCourse(UUID id) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Kurs topilmadi"));
+
+        courseRepository.delete(course);
+
+        return ApiResponse.success("Kurs muvaffaqiyatli o'chirildi");
+    }
+}
