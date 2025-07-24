@@ -1,6 +1,7 @@
 package com.example.sfera_backend.entity;
 
 import com.example.sfera_backend.entity.audit.AuditableEntity;
+import com.example.sfera_backend.entity.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
