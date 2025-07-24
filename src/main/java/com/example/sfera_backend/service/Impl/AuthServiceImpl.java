@@ -30,7 +30,7 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Ma'lumotlar noto'g'ri");
         }
 
-        String accessToken = jwtProvider.generateToken(user.getId(), user.getPhone(), user.getRole().name());
+        String accessToken = jwtProvider.generateToken(user.getId(), user.getPhone());
         String refreshToken = jwtProvider.generateRefreshToken(user.getPhone());
 
         TokenResponse response = new TokenResponse(accessToken,refreshToken,"Bearer");
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new ResourceNotFoundException("Noto'g'ri token"));
 
-        String accessToken = jwtProvider.generateToken(user.getId(), user.getPhone(), user.getRole().name());
+        String accessToken = jwtProvider.generateToken(user.getId(), user.getPhone());
 
         return ApiResponse.success(accessToken);
     }
@@ -57,15 +57,5 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         return ApiResponse.success("Tizimdan chiqildi");
-    }
-
-    @Override
-    public ApiResponse<String> forgotPassword(String phoneNumber) {
-        User user = userRepository.findByPhone(phoneNumber)
-                .orElseThrow(() -> new ResourceNotFoundException("Foydalanuvchi topilmadi"));
-
-        botService.askNewPassword(user.getChatId());
-
-        return ApiResponse.success("Parol yangilash uchun tg botga o'ting");
     }
 }

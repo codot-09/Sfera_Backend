@@ -19,25 +19,21 @@ import java.util.List;
 @Table(name = "users")
 public class User extends AuditableEntity implements UserDetails {
     @Column
-    private String fullName;
+    private String fullName = "Adminstrator";
 
     @Column(nullable = false,unique = true)
     private Long chatId;
 
-    @Column(nullable = false,unique = true)
+    @Column(unique = true)
     private String phone;
 
     @Column(nullable = false)
     private String passwordHash;
 
-    @Enumerated(value = EnumType.STRING)
-    private UserRole role;
-
-    @Column
-    private String fileUrl;
-
     @Column(columnDefinition = "TEXT")
     private String refreshToken;
+
+    private boolean verified;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -53,5 +49,4 @@ public class User extends AuditableEntity implements UserDetails {
     public String getUsername() {
         return phone;
     }
-
 }

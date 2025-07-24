@@ -1,7 +1,6 @@
 package com.example.sfera_backend.component;
 
 import com.example.sfera_backend.entity.User;
-import com.example.sfera_backend.entity.enums.UserRole;
 import com.example.sfera_backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +25,8 @@ public class DataLoader implements CommandLineRunner {
                     .chatId(7193645528L)
                     .phone("998916368424")
                     .fullName("Admin admin")
-                    .role(UserRole.ADMIN)
                     .passwordHash(passwordEncoder.encode("admin123"))
+                    .verified(true)
                     .build();
 
             userRepository.save(superAdmin);
