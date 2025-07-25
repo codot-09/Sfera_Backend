@@ -23,25 +23,19 @@ import java.util.UUID;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
-    private final CloudService cloudService;
     private final EventMapper eventMapper;
 
     @Override
-    public ApiResponse<String> addEvent(EventRequest event, MultipartFile file) throws IOException{
+    public ApiResponse<String> addEvent(EventRequest event){
 
         if ( eventRepository.existsByNameIgnoreCase(event.getName())) {
             return ApiResponse.error("Bunday Nomli Tadbir allaqachon mavjud!!!");
         }
 
-        String fileUrl = null;
-        if (!file.isEmpty()){
-            fileUrl = cloudService.uploadFile(file);
-        }
-
         Event event1 = Event.builder()
                 .name(event.getName())
                 .description(event.getDescription())
-                .fileUrl(fileUrl)
+                .fileUrl(event.getFileUrl())
                 .date(event.getDate())
                 .hour(event.getHour())
                 .build();
@@ -66,7 +60,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public ApiResponse<String> updateEvent(UUID id, EventRequest eventDTO, MultipartFile file) throws IOException {
+    public ApiResponse<String> updateEvent(UUID id, EventRequest eventDTO) {
         Event event = eventRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Event topilmadi")
         );
@@ -76,14 +70,10 @@ public class EventServiceImpl implements EventService {
             return ApiResponse.error("Event already exists");
         }
 
-        String fileUrl = null;
-        if (!file.isEmpty()){
-            fileUrl = cloudService.uploadFile(file);
-        }
 
         event.setName(eventDTO.getName());
         event.setDescription(eventDTO.getDescription());
-        event.setFileUrl(fileUrl);
+        event.setFileUrl(eventDTO.getFileUrl());
         event.setDate(eventDTO.getDate());
         event.setHour(eventDTO.getHour());
         eventRepository.save(event);

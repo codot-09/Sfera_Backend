@@ -40,16 +40,15 @@ public class EventController {
 
 
 
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping
     @Operation(
             summary = "Event saqlash uchun",
             security = @SecurityRequirement( name = "bearerAuth")
     )
     @RequireToken
     public ResponseEntity<ApiResponse<String>> createEvent(
-            @RequestParam("file") MultipartFile file,
-            @RequestBody EventRequest eventRequest) throws IOException {
-        return ResponseEntity.ok(eventService.addEvent(eventRequest,file));
+            @RequestBody EventRequest eventRequest) {
+        return ResponseEntity.ok(eventService.addEvent(eventRequest));
     }
 
 
@@ -60,9 +59,8 @@ public class EventController {
     )
     @RequireToken
     public ResponseEntity<ApiResponse<String>> updateEvent(@PathVariable UUID id,
-                                                           @RequestParam("file") MultipartFile file,
-                                                           @RequestBody EventRequest eventRequest) throws IOException{
-        return ResponseEntity.ok(eventService.updateEvent(id,eventRequest,file));
+                                                           @RequestBody EventRequest eventRequest){
+        return ResponseEntity.ok(eventService.updateEvent(id,eventRequest));
     }
 
 

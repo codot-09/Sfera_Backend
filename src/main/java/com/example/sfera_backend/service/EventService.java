@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface EventService {
 
-    ApiResponse<String>addEvent(EventRequest event, MultipartFile file) throws IOException;
+    ApiResponse<String>addEvent(EventRequest event);
     ApiResponse<List<EventDTO>> getAllEvents();
     ApiResponse<EventDTO> getEventById(UUID id);
-    ApiResponse<String> updateEvent(UUID id, EventRequest event, MultipartFile file) throws IOException;
+    ApiResponse<String> updateEvent(UUID id, EventRequest event);
     ApiResponse<String> deleteEvent(UUID id);
 }

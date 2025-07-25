@@ -23,13 +23,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
-    private final CloudServiceImpl cloudServiceImpl;
     private final CourseRepository courseRepository;
     private final StudentMapper studentMapper;
 
 
     @Override
-    public ApiResponse<String> addStudent(StudentRequest studentRequest, MultipartFile file) throws IOException {
+    public ApiResponse<String> addStudent(StudentRequest studentRequest) {
         boolean b = studentRepository.existsByFullName(studentRequest.getUserName());
         if (b) {
             return ApiResponse.error("Student already exists");
@@ -42,7 +41,7 @@ public class StudentServiceImpl implements StudentService {
         Student student = Student.builder()
                 .fullName(studentRequest.getUserName())
                 .score(studentRequest.getScore())
-                .fileUrl(fileUrl(file))
+                .fileUrl(studentRequest.getFileUrl())
                 .course(course)
                 .build();
         studentRepository.save(student);
@@ -50,7 +49,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public ApiResponse<String> updateStudent(UUID studentId,StudentRequest studentRequest, MultipartFile file) throws IOException {
+    public ApiResponse<String> updateStudent(UUID studentId,StudentRequest studentRequest) {
         Student student = studentRepository.findById(studentId).orElseThrow(
                 () -> new ResourceNotFoundException("Student not found")
         );
@@ -66,7 +65,7 @@ public class StudentServiceImpl implements StudentService {
 
         student.setId(studentId);
         student.setScore(studentRequest.getScore());
-        student.setFileUrl(fileUrl(file));
+        student.setFileUrl(studentRequest.getFileUrl());
         student.setCourse(course);
         student.setFullName(studentRequest.getUserName());
         studentRepository.save(student);
@@ -99,15 +98,5 @@ public class StudentServiceImpl implements StudentService {
         );
 
         return ApiResponse.success(studentMapper.toResponseStudent(student));
-    }
-
-
-
-    private String fileUrl(MultipartFile file) throws IOException {
-        String fileUrl = null;
-        if (!file.isEmpty()){
-            fileUrl = cloudServiceImpl.uploadFile(file);
-        }
-        return fileUrl;
     }
 }

@@ -20,4 +20,6 @@ public class EventRequest {
         private LocalDate date;
 
         private String hour;
+
+        private String fileUrl;
 }
