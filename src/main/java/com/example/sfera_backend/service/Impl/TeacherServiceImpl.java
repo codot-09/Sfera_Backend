@@ -23,18 +23,16 @@ public class TeacherServiceImpl implements TeacherService {
     private final TeacherMapper mapper;
 
     @Override
-    public ApiResponse<String> createTeacher(MultipartFile file, TeacherDTO request) throws IOException {
+    public ApiResponse<String> createTeacher(TeacherDTO request) throws IOException {
         if(teacherRepository.existsByPhone(request.phoneNumber())){
             return ApiResponse.error("O'qituvchi allaqachon mavjud");
         }
-
-        String imageUrl = cloudService.uploadFile(file);
 
         Teacher teacher = Teacher.builder()
                 .fullName(request.fullName())
                 .phone(request.phoneNumber())
                 .biography(request.biography())
-                .imageUrl(imageUrl)
+                .imageUrl(request.imageUrl())
                 .build();
 
         teacherRepository.save(teacher);
@@ -51,16 +49,14 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public ApiResponse<String> updateTeacher(MultipartFile file,TeacherDTO teacherDTO, UUID teacherId) throws IOException {
+    public ApiResponse<String> updateTeacher(TeacherDTO teacherDTO, UUID teacherId) throws IOException {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
-
-        String imageUrl = cloudService.uploadFile(file);
 
         teacher.setFullName(teacherDTO.fullName());
         teacher.setPhone(teacherDTO.phoneNumber());
         teacher.setBiography(teacherDTO.biography());
-        teacher.setImageUrl(imageUrl);
+        teacher.setImageUrl(teacherDTO.imageUrl());
 
         teacherRepository.save(teacher);
 
@@ -72,14 +68,15 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
 
-        teacherRepository.delete(teacher);
+        teacher.setActive(false);
+        teacherRepository.save(teacher);
 
         return ApiResponse.success("O'qituvchi o'chirildi");
     }
 
     @Override
-    public ApiResponse<List<TeacherDTO>> getAll() {
-        List<Teacher> teachers = teacherRepository.findAll();
+    public ApiResponse<List<TeacherDTO>> getAll(boolean status) {
+        List<Teacher> teachers = teacherRepository.findAllByActive(status);
 
         return ApiResponse.success(mapper.toDTOList(teachers));
     }

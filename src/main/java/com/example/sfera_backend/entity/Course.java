@@ -33,4 +33,6 @@ public class Course extends AuditableEntity {
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
+
+    private boolean active = true;
 }

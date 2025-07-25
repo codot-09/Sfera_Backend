@@ -17,4 +17,5 @@ public class GroupRequest {
     private UUID courseId;
     private LocalDate openDate;
     private int maxStudentCount;
+    private String imageUrl;
 }

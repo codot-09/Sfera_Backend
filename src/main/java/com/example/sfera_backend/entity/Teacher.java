@@ -23,4 +23,6 @@ public class Teacher extends AuditableEntity {
 
     @Column(nullable = false)
     private String biography;
+
+    private boolean active = true;
 }

@@ -3,6 +3,7 @@ package com.example.sfera_backend.controller;
 import com.example.sfera_backend.dto.request.LeadRequest;
 import com.example.sfera_backend.dto.response.ApiResponse;
 import com.example.sfera_backend.dto.response.LeadResponse;
+import com.example.sfera_backend.jwt.RequireToken;
 import com.example.sfera_backend.service.LeadService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class LeadController {
             summary = "ID bo'yicha leadni ko'rish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<LeadResponse>> getById(
             @PathVariable("id") UUID id
     ){
@@ -50,7 +50,7 @@ public class LeadController {
             summary = "Barcha leadlarni ko'rish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<Page<LeadResponse>>> search(
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,

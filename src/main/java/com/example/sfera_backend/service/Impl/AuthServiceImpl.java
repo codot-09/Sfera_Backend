@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("Foydalanuvchi topilmadi"));
 
         if(!encoder.matches(request.getPassword(), user.getPasswordHash())){
-            throw new RuntimeException("Ma'lumotlar noto'g'ri");
+            throw new ResourceNotFoundException("Ma'lumotlar noto'g'ri");
         }
 
         String accessToken = jwtProvider.generateToken(user.getId(), user.getPhone());

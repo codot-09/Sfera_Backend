@@ -3,15 +3,14 @@ package com.example.sfera_backend.controller;
 import com.example.sfera_backend.dto.request.GroupRequest;
 import com.example.sfera_backend.dto.response.ApiResponse;
 import com.example.sfera_backend.dto.response.GroupResponse;
+import com.example.sfera_backend.jwt.RequireToken;
 import com.example.sfera_backend.service.GroupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -23,17 +22,16 @@ import java.util.UUID;
 public class GroupController {
     private final GroupService groupService;
 
-    @PostMapping(consumes = "multipart/form-data" )
+    @PostMapping(value = "/create")
     @Operation(
             summary = "Qabul uchun guruh ochish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<String>> openGroup(
-            @RequestBody GroupRequest request,
-            @RequestParam("file") MultipartFile file
+            @RequestBody GroupRequest request
     ) throws IOException {
-        return ResponseEntity.ok(groupService.openGroup(file, request));
+        return ResponseEntity.ok(groupService.openGroup(request));
     }
 
     @DeleteMapping("/{id}")
@@ -41,7 +39,7 @@ public class GroupController {
             summary = "Guruhni yopish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<String>> closeGroup(
             @PathVariable("id") UUID id
     ){
@@ -52,8 +50,10 @@ public class GroupController {
     @Operation(
             summary = "Barcha guruhlarni ko'rish"
     )
-    public ResponseEntity<ApiResponse<List<GroupResponse>>> getAll(){
-        return ResponseEntity.ok(groupService.getAll());
+    public ResponseEntity<ApiResponse<List<GroupResponse>>> getAll(
+            @RequestParam(defaultValue = "true") boolean status
+    ){
+        return ResponseEntity.ok(groupService.getAll(status));
     }
 
     @GetMapping("/{id}")

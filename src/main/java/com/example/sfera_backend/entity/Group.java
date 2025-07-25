@@ -33,5 +33,5 @@ public class Group extends AuditableEntity {
     @Column(nullable = false)
     private LocalDate openDate;
 
-    private boolean admissionOpen;
+    private boolean admissionOpen = true;
 }

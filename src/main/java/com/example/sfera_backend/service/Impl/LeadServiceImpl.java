@@ -41,6 +41,10 @@ public class LeadServiceImpl implements LeadService {
         Group group = groupRepository.findById(leadRequest.getGroupId())
                 .orElseThrow(() -> new ResourceNotFoundException("Guruh topilmadi"));
 
+        if(!group.isAdmissionOpen()){
+            return ApiResponse.error("Guruh mavjud emas");
+        }
+
         Lead newLead = Lead.builder()
                 .fullName(leadRequest.getFullName())
                 .phone(leadRequest.getPhoneNumber())
