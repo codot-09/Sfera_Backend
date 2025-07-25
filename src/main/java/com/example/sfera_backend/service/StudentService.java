@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface StudentService {
-    ApiResponse<String> addStudent(StudentRequest studentRequest, MultipartFile file) throws IOException;
-    ApiResponse<String> updateStudent(UUID studentId,StudentRequest studentRequest, MultipartFile file) throws IOException;
+    ApiResponse<String> addStudent(StudentRequest studentRequest);
+    ApiResponse<String> updateStudent(UUID studentId,StudentRequest studentRequest);
     ApiResponse<String> deleteStudent(UUID studentId);
     ApiResponse<List<StudentResponse>> getStudentList();
     ApiResponse<StudentResponse> getStudentById(UUID studentId);

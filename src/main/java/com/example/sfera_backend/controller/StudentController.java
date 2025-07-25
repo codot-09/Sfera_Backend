@@ -42,21 +42,20 @@ public class StudentController {
 
 
 
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping
     @Operation(
             summary = "Yangi student qushish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
     @RequireToken
     public ResponseEntity<ApiResponse<String>> createStudent(
-            @RequestParam("file") MultipartFile file,
-            @RequestBody StudentRequest studentRequest) throws IOException {
-        return ResponseEntity.ok(studentService.addStudent(studentRequest, file));
+            @RequestBody StudentRequest studentRequest) {
+        return ResponseEntity.ok(studentService.addStudent(studentRequest));
     }
 
 
 
-    @PutMapping(value = "/{studentId}", consumes = "multipart/form-data")
+    @PutMapping(value = "/{studentId}")
     @Operation(
             summary = "Student tahrirlash",
             security = @SecurityRequirement(name = "bearerAuth")
@@ -64,9 +63,8 @@ public class StudentController {
     @RequireToken
     public ResponseEntity<ApiResponse<String>> updateStudent(
             @PathVariable UUID studentId,
-            @RequestParam("file") MultipartFile file,
-            @RequestBody StudentRequest studentRequest) throws IOException {
-        return ResponseEntity.ok(studentService.updateStudent(studentId, studentRequest, file));
+            @RequestBody StudentRequest studentRequest){
+        return ResponseEntity.ok(studentService.updateStudent(studentId, studentRequest));
     }
 
 

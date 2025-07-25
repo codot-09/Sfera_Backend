@@ -15,4 +15,5 @@ public class StudentRequest {
     private String userName;
     private double score;
     private UUID courseId;
+    private String fileUrl;
 }
