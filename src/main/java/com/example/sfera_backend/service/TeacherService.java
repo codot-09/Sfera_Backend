@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TeacherService {
-    ApiResponse<String> createTeacher(MultipartFile file,TeacherDTO teacherDTO) throws IOException;
+    ApiResponse<String> createTeacher(TeacherDTO teacherDTO) throws IOException;
     ApiResponse<TeacherDTO> getById(UUID id);
-    ApiResponse<String> updateTeacher(MultipartFile file,TeacherDTO teacherDTO,UUID teacherId) throws IOException;
+    ApiResponse<String> updateTeacher(TeacherDTO teacherDTO,UUID teacherId) throws IOException;
     ApiResponse<String> deleteTeacher(UUID id);
-    ApiResponse<List<TeacherDTO>> getAll();
+    ApiResponse<List<TeacherDTO>> getAll(boolean status);
 }

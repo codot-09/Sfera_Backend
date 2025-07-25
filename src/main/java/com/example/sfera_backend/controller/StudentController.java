@@ -3,15 +3,14 @@ package com.example.sfera_backend.controller;
 import com.example.sfera_backend.dto.request.StudentRequest;
 import com.example.sfera_backend.dto.response.ApiResponse;
 import com.example.sfera_backend.dto.response.StudentResponse;
+import com.example.sfera_backend.jwt.RequireToken;
 import com.example.sfera_backend.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +47,7 @@ public class StudentController {
             summary = "Yangi student qushish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<String>> createStudent(
             @RequestParam("file") MultipartFile file,
             @RequestBody StudentRequest studentRequest) throws IOException {
@@ -62,7 +61,7 @@ public class StudentController {
             summary = "Student tahrirlash",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<String>> updateStudent(
             @PathVariable UUID studentId,
             @RequestParam("file") MultipartFile file,
@@ -78,7 +77,7 @@ public class StudentController {
             summary = "Studentni uchirish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<String>> deleteStudent(@PathVariable UUID studentId) {
         return ResponseEntity.ok(studentService.deleteStudent(studentId));
     }

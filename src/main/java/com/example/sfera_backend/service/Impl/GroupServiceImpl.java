@@ -27,7 +27,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMapper mapper;
 
     @Override
-    public ApiResponse<String> openGroup(MultipartFile file,GroupRequest request) throws IOException {
+    public ApiResponse<String> openGroup(GroupRequest request) throws IOException {
         if(groupRepository.existsByName(request.getName())){
             return ApiResponse.error("Guruh mavjud");
         }
@@ -35,14 +35,16 @@ public class GroupServiceImpl implements GroupService {
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new ResourceNotFoundException("Kurs topilmadi"));
 
-        String imageUrl = cloudService.uploadFile(file);
+        if(!course.isActive()){
+            return ApiResponse.error("Kurs mavjud emas");
+        }
 
         Group newGroup = Group.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .course(course)
                 .openDate(request.getOpenDate())
-                .imageUrl(imageUrl)
+                .imageUrl(request.getImageUrl())
                 .build();
 
         groupRepository.save(newGroup);
@@ -55,13 +57,15 @@ public class GroupServiceImpl implements GroupService {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Guruh topilmadi"));
 
-        groupRepository.delete(group);
+        group.setAdmissionOpen(false);
+        groupRepository.save(group);
+
         return ApiResponse.success("Guruh yopildi");
     }
 
     @Override
-    public ApiResponse<List<GroupResponse>> getAll() {
-        List<Group> groups = groupRepository.findAll();
+    public ApiResponse<List<GroupResponse>> getAll(boolean status) {
+        List<Group> groups = groupRepository.findAllByAdmissionOpen(status);
 
         return ApiResponse.success(mapper.toResponseList(groups));
     }

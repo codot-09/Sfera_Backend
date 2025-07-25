@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CourseService {
-    ApiResponse<String> createCourse(CourseRequest request, MultipartFile file) throws IOException;
+    ApiResponse<String> createCourse(CourseRequest request) throws IOException;
     ApiResponse<CourseDetailsResponse> getById(UUID id);
-    ApiResponse<List<CourseDetailsResponse>> getAll();
-    ApiResponse<String> updateCourse(UUID id, CourseRequest request,MultipartFile file) throws IOException;
+    ApiResponse<List<CourseDetailsResponse>> getAll(boolean status);
+    ApiResponse<String> updateCourse(UUID id, CourseRequest request) throws IOException;
     ApiResponse<String> deleteCourse(UUID id);
 }

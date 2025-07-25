@@ -13,7 +13,6 @@ public record TeacherDTO (
         @NotBlank(message = "Biografiya bo'sh bo'lmasin")
         String biography,
 
-        @Schema(hidden = true)
         String imageUrl
 ){
 }

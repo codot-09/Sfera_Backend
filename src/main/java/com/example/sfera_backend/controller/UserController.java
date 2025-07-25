@@ -3,13 +3,13 @@ package com.example.sfera_backend.controller;
 import com.example.sfera_backend.dto.response.ApiResponse;
 import com.example.sfera_backend.dto.response.UserDetailsResponse;
 import com.example.sfera_backend.entity.User;
+import com.example.sfera_backend.jwt.RequireToken;
 import com.example.sfera_backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -26,6 +26,7 @@ public class UserController {
             summary = "O'z profilini ko'rish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
+    @RequireToken
     public ResponseEntity<ApiResponse<UserDetailsResponse>> getProfile(
             @AuthenticationPrincipal User user
     ){
@@ -37,7 +38,7 @@ public class UserController {
             summary = "Barcha foydalanuvchilarni ko'rish",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<List<UserDetailsResponse>>> getAll(){
         return ResponseEntity.ok(userService.getAll());
     }
@@ -47,7 +48,7 @@ public class UserController {
             summary = "Ismni yangilash",
             security = @SecurityRequirement(name = "bearerAuth")
     )
-    @PreAuthorize("hasRole('ADMIN')")
+    @RequireToken
     public ResponseEntity<ApiResponse<String>> updateName(
             @RequestParam String name,
             @AuthenticationPrincipal User user

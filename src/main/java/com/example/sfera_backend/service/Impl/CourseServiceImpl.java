@@ -30,15 +30,17 @@ public class CourseServiceImpl implements CourseService {
     private final TeacherRepository teacherRepository;
 
     @Override
-    public ApiResponse<String> createCourse(CourseRequest request, MultipartFile file) throws IOException {
+    public ApiResponse<String> createCourse(CourseRequest request) throws IOException {
         if(courseRepository.existsByName(request.getName())){
             return ApiResponse.error("Kurs allaqachon mavjud");
         }
 
-        String imageUr = cloudService.uploadFile(file);
-
         Teacher teacher = teacherRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
+
+        if(!teacher.isActive()){
+            return ApiResponse.error("O'qituvchi mavjud emas");
+        }
 
         Course newCourse = Course.builder()
                 .name(request.getName())
@@ -47,7 +49,7 @@ public class CourseServiceImpl implements CourseService {
                 .videoUrl(request.getVideoUrl())
                 .price(request.getPrice())
                 .teacher(teacher)
-                .imageUrl(imageUr)
+                .imageUrl(request.getImageUrl())
                 .build();
 
         courseRepository.save(newCourse);
@@ -63,18 +65,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ApiResponse<List<CourseDetailsResponse>> getAll() {
-        List<Course> courses = courseRepository.findAll();
+    public ApiResponse<List<CourseDetailsResponse>> getAll(boolean status) {
+        List<Course> courses = courseRepository.findAllByActive(status);
 
         return ApiResponse.success(mapper.toResponseList(courses));
     }
 
     @Override
-    public ApiResponse<String> updateCourse(UUID id, CourseRequest request,MultipartFile file) throws IOException {
+    public ApiResponse<String> updateCourse(UUID id, CourseRequest request) throws IOException {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Kurs topilmadi"));
-
-        String imageUrl = cloudService.uploadFile(file);
 
         Teacher teacher = teacherRepository.findById(request.getTeacherId())
                 .orElseThrow(() -> new ResourceNotFoundException("O'qituvchi topilmadi"));
@@ -84,7 +84,7 @@ public class CourseServiceImpl implements CourseService {
         course.setDuration(request.getDuration());
         course.setPrice(request.getPrice());
         course.setVideoUrl(request.getVideoUrl());
-        course.setImageUrl(imageUrl);
+        course.setImageUrl(request.getImageUrl());
         course.setTeacher(teacher);
 
         courseRepository.save(course);
@@ -97,7 +97,8 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Kurs topilmadi"));
 
-        courseRepository.delete(course);
+        course.setActive(false);
+        courseRepository.save(course);
 
         return ApiResponse.success("Kurs muvaffaqiyatli o'chirildi");
     }

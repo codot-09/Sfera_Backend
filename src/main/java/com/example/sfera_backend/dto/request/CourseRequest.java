@@ -18,4 +18,5 @@ public class CourseRequest {
     private String videoUrl;
     private UUID teacherId;
     private BigDecimal price;
+    private String imageUrl;
 }

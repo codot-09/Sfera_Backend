@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface GroupService {
-    ApiResponse<String> openGroup(MultipartFile file, GroupRequest request) throws IOException;
+    ApiResponse<String> openGroup(GroupRequest request) throws IOException;
     ApiResponse<String> closeGroup(UUID groupId);
-    ApiResponse<List<GroupResponse>> getAll();
+    ApiResponse<List<GroupResponse>> getAll(boolean status);
     ApiResponse<GroupResponse> getById(UUID id);
 }
