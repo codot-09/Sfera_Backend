@@ -5,8 +5,10 @@ import java.util.UUID;
 public record StudentResponse(
         UUID id,
         String fullName,
-        double score,
-        UUID courseId,
+        String description,
+        String job,
+        String company,
+        String phoneNumber,
         String fileUrl
 ) {
 }

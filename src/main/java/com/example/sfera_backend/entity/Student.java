@@ -17,10 +17,13 @@ public class Student extends AuditableEntity {
 
     private String fullName;
 
-    @ManyToOne
-    private Course course;
+    private String description;
 
-    private double score;
+    private String job;
+
+    private String company;
+
+    private String phoneNumber;
 
     private String fileUrl;
 }

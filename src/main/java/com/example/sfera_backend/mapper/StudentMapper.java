@@ -11,8 +11,10 @@ public class StudentMapper {
         return new StudentResponse(
                 student.getId(),
                 student.getFullName(),
-                student.getScore(),
-                student.getCourse().getId(),
+                student.getDescription(),
+                student.getJob(),
+                student.getCompany(),
+                student.getPhoneNumber(),
                 student.getFileUrl()
         );
     }
