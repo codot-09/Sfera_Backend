@@ -34,15 +34,13 @@ public class StudentServiceImpl implements StudentService {
             return ApiResponse.error("Student already exists");
         }
 
-        Course course = courseRepository.findById(studentRequest.getCourseId()).orElseThrow(
-                () -> new ResourceNotFoundException("Course not found")
-        );
-
         Student student = Student.builder()
                 .fullName(studentRequest.getUserName())
-                .score(studentRequest.getScore())
+                .description(studentRequest.getDescription())
+                .phoneNumber(studentRequest.getPhoneNumber())
+                .company(studentRequest.getCompany())
+                .job(studentRequest.getJob())
                 .fileUrl(studentRequest.getFileUrl())
-                .course(course)
                 .build();
         studentRepository.save(student);
         return ApiResponse.success("Student saqlandi");
@@ -59,14 +57,12 @@ public class StudentServiceImpl implements StudentService {
             return ApiResponse.error("Student already exists");
         }
 
-        Course course = courseRepository.findById(studentRequest.getCourseId()).orElseThrow(
-                () -> new ResourceNotFoundException("Course not found")
-        );
-
         student.setId(studentId);
-        student.setScore(studentRequest.getScore());
+        student.setJob(studentRequest.getJob());
+        student.setCompany(studentRequest.getCompany());
+        student.setPhoneNumber(studentRequest.getPhoneNumber());
         student.setFileUrl(studentRequest.getFileUrl());
-        student.setCourse(course);
+        student.setDescription(studentRequest.getDescription());
         student.setFullName(studentRequest.getUserName());
         studentRepository.save(student);
 

@@ -13,7 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class StudentRequest {
     private String userName;
-    private double score;
-    private UUID courseId;
+    private String description;
+    private String phoneNumber;
+    private String company;
+    private String job;
     private String fileUrl;
 }
